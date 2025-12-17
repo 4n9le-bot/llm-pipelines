@@ -12,4 +12,5 @@ dist/
 .venv/
 
 claude.md
-claude_docs
+claude_docs/
+claude_summary/
