@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: llm-pipelines
-Version: 0.1.0
+Version: 0.3.0
 Summary: A modular, async, composable AI pipeline library for building conversational agents and content processing pipelines
 Author: llm-pipelines contributors
 License: MIT
@@ -46,13 +46,19 @@ Requires-Dist: openai>=1.0.0; extra == "openai"
 
 ## 安装
 
+基础安装：
 ```bash
 pip install llm-pipelines
 ```
 
+包含 AI 集成（OpenAI SDK）：
+```bash
+pip install "llm-pipelines[openai]"
+```
+
 开发安装：
 ```bash
-pip install -e ".[dev]"
+pip install -e ".[dev,openai]"
 ```
 
 ## 快速开始
@@ -94,9 +100,50 @@ pipeline = processor1 + processor2 + processor3
 parallel_pipeline = item_processor1 // item_processor2
 ```
 
+## AI 集成
+
+支持 OpenAI 兼容的 API（OpenAI、DeepSeek、Qwen 等）：
+
+```python
+from llm_pipelines import StreamingChatProcessor, StreamItem, stream_content
+
+# 流式 AI 对话
+chat = StreamingChatProcessor(
+    api_key="your-api-key",
+    base_url="https://api.openai.com/v1",
+    model="gpt-4"
+)
+
+input_stream = stream_content([
+    StreamItem(data="你好！", role="user")
+])
+
+# 实时输出
+async for chunk in chat(input_stream):
+    print(chunk.data, end="", flush=True)
+```
+
+查看 `examples/ai_chat_example.py` 获取更多 AI 集成示例。
+
+## Context 管理
+
+统一的异步任务管理，确保资源正确清理：
+
+```python
+from llm_pipelines import context, create_task
+
+async with context():
+    # 所有在此创建的任务会被自动追踪
+    task = create_task(some_coroutine(), name="my_task")
+    result = await task
+# 退出时自动清理所有未完成的任务
+```
+
+查看 `examples/context_example.py` 获取更多 Context 管理示例。
+
 ## 项目状态
 
-🚧 **当前阶段**: 核心架构实现中
+✅ **版本 0.3.0** - Context 管理已完成
 
 已实现:
 - [x] StreamItem 数据模型
@@ -104,6 +151,10 @@ parallel_pipeline = item_processor1 // item_processor2
 - [x] 组合运算符 (`+`, `//`)
 - [x] Stream 工具函数
 - [x] 装饰器支持
+- [x] **StreamingChatProcessor** - 流式 AI 调用
+- [x] **ChatCompletionProcessor** - 批量 AI 调用
+- [x] OpenAI 兼容 API 支持
+- [x] **Context 管理** - 统一任务管理和自动清理
 
 ## 开发
 

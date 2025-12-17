@@ -1,10 +1,16 @@
-.venv
 .claude/
 __pycache__/
 *.pyc
 .DS_Store
 .idea/
 .vscode/
+build/
+dist/
+*.egg-info/
+.env
+.env.*
+.venv/
 
 claude.md
 claude_docs
+claude_summary
