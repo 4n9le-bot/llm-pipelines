@@ -103,7 +103,8 @@ async for result in process_item(input_stream):
 ### AI Integration
 
 ```python
-from llm_pipelines import StreamingChatProcessor, StreamItem, stream_content
+from llm_pipelines import StreamItem, stream_content
+from llm_pipelines.chat.streaming import StreamingChatProcessor
 
 # Initialize with any OpenAI-compatible API
 chat = StreamingChatProcessor(
