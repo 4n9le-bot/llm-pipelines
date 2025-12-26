@@ -2,15 +2,17 @@
 Tests for decorator module.
 """
 
+from collections.abc import AsyncIterable
+
 import pytest
 
-from llm_pipelines.core import StreamItem
-from llm_pipelines.decorators import (
+from llm_pipelines.core.base import StreamItem
+from llm_pipelines.core.decorators import (
     item_processor,
     item_processor_function,
     processor_function,
 )
-from llm_pipelines.stream_utils import gather_stream, stream_content
+from llm_pipelines.core.stream_utils import gather_stream, stream_content
 
 
 class TestProcessorFunction:

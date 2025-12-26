@@ -3,11 +3,13 @@ Tests for stream_utils module.
 """
 
 import asyncio
+from collections.abc import AsyncIterable
 
 import pytest
 
-from llm_pipelines.core import StreamItem
-from llm_pipelines.stream_utils import (
+from llm_pipelines.core.base import Processor, StreamItem
+from llm_pipelines.core.decorators import processor_function
+from llm_pipelines.core.stream_utils import (
     concat,
     gather_stream,
     merge,

@@ -3,10 +3,13 @@ Tests for context management module.
 """
 
 import asyncio
+from collections.abc import AsyncIterable
 
 import pytest
 
-from llm_pipelines.context import Context, context, create_task, current
+from llm_pipelines.core.base import Processor, StreamItem
+from llm_pipelines.core.context import Context, context, create_task, current
+from llm_pipelines.core.stream_utils import merge, split, stream_content
 
 
 class TestContext:

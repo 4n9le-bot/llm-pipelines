@@ -2,13 +2,16 @@
 Tests for AI integration module.
 """
 
+from collections.abc import AsyncIterable
 from unittest.mock import AsyncMock, MagicMock, patch
 from typing import Any
 
 import pytest
 
-from llm_pipelines.core import STATUS_STREAM, StreamItem
-from llm_pipelines.stream_utils import gather_stream, stream_content
+from llm_pipelines.chat.completion import ChatCompletionProcessor
+from llm_pipelines.chat.streaming import StreamingChatProcessor
+from llm_pipelines.core.base import STATUS_STREAM, StreamItem
+from llm_pipelines.core.stream_utils import gather_stream, stream_content
 
 
 # Mock classes for testing without OpenAI dependency
@@ -74,7 +77,7 @@ class TestStreamingChatProcessor:
 
     async def test_streaming_chat_basic(self, mock_openai: Any) -> None:
         """Test basic streaming chat completion."""
-        from llm_pipelines.ai_integration import StreamingChatProcessor
+        from llm_pipelines.chat.streaming import StreamingChatProcessor
 
         # Setup mock
         mock_client_instance = AsyncMock()
@@ -114,7 +117,7 @@ class TestStreamingChatProcessor:
 
     async def test_streaming_chat_with_multiple_messages(self, mock_openai: Any) -> None:
         """Test streaming with multiple input messages."""
-        from llm_pipelines.ai_integration import StreamingChatProcessor
+        from llm_pipelines.chat.streaming import StreamingChatProcessor
 
         mock_client_instance = AsyncMock()
         mock_openai.return_value = mock_client_instance
@@ -152,7 +155,7 @@ class TestStreamingChatProcessor:
 
     async def test_streaming_chat_empty_input(self, mock_openai: Any) -> None:
         """Test streaming with empty input."""
-        from llm_pipelines.ai_integration import StreamingChatProcessor
+        from llm_pipelines.chat.streaming import StreamingChatProcessor
 
         mock_client_instance = AsyncMock()
         mock_openai.return_value = mock_client_instance
@@ -169,7 +172,7 @@ class TestStreamingChatProcessor:
 
     async def test_streaming_chat_api_error(self, mock_openai: Any) -> None:
         """Test streaming with API error."""
-        from llm_pipelines.ai_integration import StreamingChatProcessor
+        from llm_pipelines.chat.streaming import StreamingChatProcessor
 
         mock_client_instance = AsyncMock()
         mock_openai.return_value = mock_client_instance
@@ -191,7 +194,7 @@ class TestStreamingChatProcessor:
 
     async def test_streaming_chat_with_config(self, mock_openai: Any) -> None:
         """Test streaming with additional configuration."""
-        from llm_pipelines.ai_integration import StreamingChatProcessor
+        from llm_pipelines.chat.streaming import StreamingChatProcessor
 
         mock_client_instance = AsyncMock()
         mock_openai.return_value = mock_client_instance
@@ -229,7 +232,7 @@ class TestChatCompletionProcessor:
 
     async def test_chat_completion_basic(self, mock_openai: Any) -> None:
         """Test basic chat completion."""
-        from llm_pipelines.ai_integration import ChatCompletionProcessor
+        from llm_pipelines.chat.completion import ChatCompletionProcessor
 
         mock_client_instance = AsyncMock()
         mock_openai.return_value = mock_client_instance
@@ -254,7 +257,7 @@ class TestChatCompletionProcessor:
 
     async def test_chat_completion_with_usage(self, mock_openai: Any) -> None:
         """Test chat completion includes usage statistics."""
-        from llm_pipelines.ai_integration import ChatCompletionProcessor
+        from llm_pipelines.chat.completion import ChatCompletionProcessor
 
         mock_client_instance = AsyncMock()
         mock_openai.return_value = mock_client_instance
@@ -276,7 +279,7 @@ class TestChatCompletionProcessor:
 
     async def test_chat_completion_empty_input(self, mock_openai: Any) -> None:
         """Test chat completion with empty input."""
-        from llm_pipelines.ai_integration import ChatCompletionProcessor
+        from llm_pipelines.chat.completion import ChatCompletionProcessor
 
         mock_client_instance = AsyncMock()
         mock_openai.return_value = mock_client_instance
@@ -293,7 +296,7 @@ class TestChatCompletionProcessor:
 
     async def test_chat_completion_api_error(self, mock_openai: Any) -> None:
         """Test chat completion with API error."""
-        from llm_pipelines.ai_integration import ChatCompletionProcessor
+        from llm_pipelines.chat.completion import ChatCompletionProcessor
 
         mock_client_instance = AsyncMock()
         mock_openai.return_value = mock_client_instance
@@ -315,7 +318,7 @@ class TestChatCompletionProcessor:
 
     async def test_chat_completion_with_config(self, mock_openai: Any) -> None:
         """Test chat completion with additional configuration."""
-        from llm_pipelines.ai_integration import ChatCompletionProcessor
+        from llm_pipelines.chat.completion import ChatCompletionProcessor
 
         mock_client_instance = AsyncMock()
         mock_openai.return_value = mock_client_instance
@@ -353,7 +356,7 @@ class TestImportError:
     def test_import_error_streaming(self) -> None:
         """Test StreamingChatProcessor raises ImportError when OpenAI not available."""
         with patch("llm_pipelines.ai_integration.OPENAI_AVAILABLE", False):
-            from llm_pipelines.ai_integration import StreamingChatProcessor
+            from llm_pipelines.chat.streaming import StreamingChatProcessor
 
             with pytest.raises(ImportError, match="OpenAI library is required"):
                 StreamingChatProcessor(api_key="test-key", model="gpt-4")
@@ -361,7 +364,7 @@ class TestImportError:
     def test_import_error_completion(self) -> None:
         """Test ChatCompletionProcessor raises ImportError when OpenAI not available."""
         with patch("llm_pipelines.ai_integration.OPENAI_AVAILABLE", False):
-            from llm_pipelines.ai_integration import ChatCompletionProcessor
+            from llm_pipelines.chat.completion import ChatCompletionProcessor
 
             with pytest.raises(ImportError, match="OpenAI library is required"):
                 ChatCompletionProcessor(api_key="test-key", model="gpt-4")

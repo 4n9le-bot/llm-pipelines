@@ -2,9 +2,11 @@
 Tests for core module: StreamItem, Processor, ItemProcessor.
 """
 
+from collections.abc import AsyncIterable
+
 import pytest
 
-from llm_pipelines.core import (
+from llm_pipelines.core.base import (
     DEBUG_STREAM,
     MAIN_STREAM,
     STATUS_STREAM,
@@ -12,7 +14,7 @@ from llm_pipelines.core import (
     Processor,
     StreamItem,
 )
-from llm_pipelines.stream_utils import gather_stream, stream_content
+from llm_pipelines.core.stream_utils import gather_stream, stream_content
 
 
 class TestStreamItem:
