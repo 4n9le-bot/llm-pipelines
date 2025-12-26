@@ -8,13 +8,9 @@ from typing import TypeVar
 
 from llm_pipelines.core import StreamItem
 
-try:
-    from llm_pipelines import context as context_module
-
-    _CONTEXT_AVAILABLE = True
-except ImportError:
-    _CONTEXT_AVAILABLE = False
-    context_module = None  # type: ignore
+# Note: Can't import context module here due to circular imports
+# with core/__init__.py. Import it inside functions where needed.
+_CONTEXT_AVAILABLE = True
 
 T = TypeVar("T")
 
@@ -104,10 +100,12 @@ async def split(
     # Start producer task (use context if available)
     if _CONTEXT_AVAILABLE:
         try:
-            ctx = context_module.current()
+            # Import here to avoid circular import with core/__init__.py
+            from llm_pipelines.core import current
+            ctx = current()
             ctx.create_task(producer(), name="split_producer")
-        except RuntimeError:
-            # No active context, use regular create_task
+        except (RuntimeError, ImportError):
+            # No active context or import failed, use regular create_task
             asyncio.create_task(producer())
     else:
         asyncio.create_task(producer())
@@ -198,12 +196,14 @@ async def merge(
     tasks: list[asyncio.Task[None]] = []
     if _CONTEXT_AVAILABLE:
         try:
-            ctx = context_module.current()
+            # Import here to avoid circular import with core/__init__.py
+            from llm_pipelines.core import current
+            ctx = current()
             for i, stream in enumerate(streams):
                 task = ctx.create_task(consume_stream(stream), name=f"merge_consumer_{i}")
                 tasks.append(task)
-        except RuntimeError:
-            # No active context, use regular create_task
+        except (RuntimeError, ImportError):
+            # No active context or import failed, use regular create_task
             tasks = [asyncio.create_task(consume_stream(stream)) for stream in streams]
     else:
         tasks = [asyncio.create_task(consume_stream(stream)) for stream in streams]
