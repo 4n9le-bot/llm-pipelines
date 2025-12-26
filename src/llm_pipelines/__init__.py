@@ -1,74 +1,55 @@
 """
 llm-pipelines: A modular, async, composable AI pipeline library.
+
+Core abstractions and utilities for building conversational agents,
+content processing pipelines, and multi-step reasoning systems.
 """
 
 from llm_pipelines.core import (
-    StreamItem,
-    Processor,
-    ItemProcessor,
-    MAIN_STREAM,
     DEBUG_STREAM,
+    MAIN_STREAM,
     STATUS_STREAM,
-)
-from llm_pipelines.decorators import (
-    processor_function,
-    item_processor_function,
-    item_processor,
-)
-from llm_pipelines.stream_utils import (
-    split,
+    Context,
+    ItemProcessor,
+    Processor,
+    StreamItem,
+    collect_stream,
     concat,
-    merge,
+    context,
+    create_task,
+    current,
     gather_stream,
+    item_processor,
+    item_processor_function,
+    merge,
+    processor_function,
+    split,
     stream_content,
 )
-from llm_pipelines.context import (
-    context,
-    Context,
-    current,
-    create_task,
-)
-
-# Optional AI integration (requires openai package)
-try:
-    from llm_pipelines.ai_integration import (
-        StreamingChatProcessor,
-        ChatCompletionProcessor,
-    )
-
-    _AI_AVAILABLE = True
-except ImportError:
-    _AI_AVAILABLE = False
-    StreamingChatProcessor = None  # type: ignore
-    ChatCompletionProcessor = None  # type: ignore
-
-__version__ = "0.3.0"
 
 __all__ = [
-    # Core classes
-    "StreamItem",
-    "Processor",
-    "ItemProcessor",
-    # Stream names
-    "MAIN_STREAM",
+    # Constants
     "DEBUG_STREAM",
+    "MAIN_STREAM",
     "STATUS_STREAM",
+    # Core classes
+    "Processor",
+    "StreamItem",
+    "ItemProcessor",
     # Decorators
     "processor_function",
-    "item_processor_function",
     "item_processor",
-    # Stream utilities
+    "item_processor_function",
+    # Stream utils
+    "stream_content",
+    "collect_stream",
+    "gather_stream",
     "split",
     "concat",
     "merge",
-    "gather_stream",
-    "stream_content",
-    # Context management
-    "context",
+    # Context
     "Context",
+    "context",
     "current",
     "create_task",
-    # AI Integration (optional)
-    "StreamingChatProcessor",
-    "ChatCompletionProcessor",
 ]
