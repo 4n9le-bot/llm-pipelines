@@ -67,9 +67,12 @@ class MockStreamChunk:
 @pytest.fixture
 def mock_openai():
     """Mock the OpenAI module."""
-    with patch("llm_pipelines.ai_integration.OPENAI_AVAILABLE", True):
-        with patch("llm_pipelines.ai_integration.AsyncOpenAI") as mock_client:
-            yield mock_client
+    with patch("llm_pipelines.chat.streaming.OPENAI_AVAILABLE", True):
+        with patch("llm_pipelines.chat.completion.OPENAI_AVAILABLE", True):
+            with patch("llm_pipelines.chat.streaming.AsyncOpenAI") as mock_streaming:
+                with patch("llm_pipelines.chat.completion.AsyncOpenAI", mock_streaming):
+                    # Both modules use the same mock instance
+                    yield mock_streaming
 
 
 class TestStreamingChatProcessor:
@@ -355,7 +358,7 @@ class TestImportError:
 
     def test_import_error_streaming(self) -> None:
         """Test StreamingChatProcessor raises ImportError when OpenAI not available."""
-        with patch("llm_pipelines.ai_integration.OPENAI_AVAILABLE", False):
+        with patch("llm_pipelines.chat.streaming.OPENAI_AVAILABLE", False):
             from llm_pipelines.chat.streaming import StreamingChatProcessor
 
             with pytest.raises(ImportError, match="OpenAI library is required"):
@@ -363,7 +366,7 @@ class TestImportError:
 
     def test_import_error_completion(self) -> None:
         """Test ChatCompletionProcessor raises ImportError when OpenAI not available."""
-        with patch("llm_pipelines.ai_integration.OPENAI_AVAILABLE", False):
+        with patch("llm_pipelines.chat.completion.OPENAI_AVAILABLE", False):
             from llm_pipelines.chat.completion import ChatCompletionProcessor
 
             with pytest.raises(ImportError, match="OpenAI library is required"):

@@ -215,7 +215,7 @@ class TestIntegration:
 
     async def test_split_process_merge(self) -> None:
         """Test splitting, processing, and merging pattern."""
-        from llm_pipelines.decorators import processor_function
+        from llm_pipelines.core.decorators import processor_function
 
         @processor_function
         async def add_prefix(content):

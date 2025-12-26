@@ -15,7 +15,6 @@ from llm_pipelines.core.decorators import (
     processor_function,
 )
 from llm_pipelines.core.stream_utils import (
-    collect_stream,
     concat,
     gather_stream,
     merge,
@@ -38,7 +37,6 @@ __all__ = [
     "item_processor_function",
     # Stream utils
     "stream_content",
-    "collect_stream",
     "gather_stream",
     "split",
     "concat",

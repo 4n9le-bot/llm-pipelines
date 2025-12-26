@@ -13,7 +13,6 @@ from llm_pipelines.core import (
     ItemProcessor,
     Processor,
     StreamItem,
-    collect_stream,
     concat,
     context,
     create_task,
@@ -42,7 +41,6 @@ __all__ = [
     "item_processor_function",
     # Stream utils
     "stream_content",
-    "collect_stream",
     "gather_stream",
     "split",
     "concat",
